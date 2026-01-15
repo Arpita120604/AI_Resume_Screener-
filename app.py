@@ -1,18 +1,11 @@
-import PyPDF2
-import docx
+import streamlit as st
 
+st.set_page_config(page_title="AI Resume Screener")
 
-def extract_text_from_pdf(file):
-    pdf_reader = PyPDF2.PdfReader(file)
-    text = ""
-    for page in pdf_reader.pages:
-        text += page.extract_text() or ""
-    return text
+st.title("AI Resume Screener")
+st.write("App is running successfully ✅")
 
+uploaded_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"])
 
-def extract_text_from_docx(file):
-    document = docx.Document(file)
-    text = ""
-    for para in document.paragraphs:
-        text += para.text + " "
-    return text
+if uploaded_file:
+    st.success("File uploaded successfully!")
