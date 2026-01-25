@@ -34,3 +34,24 @@ if uploaded_file and job_description:
 
 elif uploaded_file and not job_description:
     st.warning("⚠️ Please enter the job description.")
+
+
+if uploaded_file and job_description:
+    resume_text = extract_text_from_pdf(uploaded_file)
+
+    # --- AI MATCHING ---
+    resume_embedding = model.encode(resume_text)
+    jd_embedding = model.encode(job_description)
+
+    similarity = cosine_similarity(
+        [resume_embedding],
+        [jd_embedding]
+    )[0][0]
+
+    score = round(similarity * 100, 2)
+
+    # --- SHOW RESULT ---
+    st.success("Resume analyzed successfully!")
+    st.subheader("Result")
+    st.metric("Resume Match Score", f"{score}%")
+
