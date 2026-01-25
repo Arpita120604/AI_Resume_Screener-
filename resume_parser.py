@@ -8,3 +8,6 @@ def extract_text_from_pdf(file):
         text += page.extract_text()
 
     return text
+
+Fix indentation error in resume_paper.py
+
