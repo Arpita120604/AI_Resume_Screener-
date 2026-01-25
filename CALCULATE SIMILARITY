@@ -1,8 +1,0 @@
-from sklearn.metrics.pairwise import cosine_similarity
-
-similarity = cosine_similarity(
-    [resume_embedding],
-    [jd_embedding]
-)[0][0]
-
-score = round(similarity * 100, 2)
