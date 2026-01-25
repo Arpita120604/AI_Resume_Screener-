@@ -55,3 +55,56 @@ if uploaded_file and job_description:
     st.subheader("Result")
     st.metric("Resume Match Score", f"{score}%")
 
+
+import streamlit as st
+from resume_parser import extract_text_from_pdf
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+
+st.set_page_config(page_title="AI Resume Screener")
+
+st.title("AI Resume Screener")
+
+# Job Description input
+job_description = st.text_area(
+    "Enter Job Description",
+    height=200,
+    placeholder="Paste job description here..."
+)
+
+# Resume upload
+uploaded_file = st.file_uploader(
+    "Upload Resume (PDF)",
+    type=["pdf"]
+)
+
+# Load AI model (cached)
+@st.cache_resource
+def load_model():
+    return SentenceTransformer("all-MiniLM-L6-v2")
+
+model = load_model()
+
+# Show result
+if uploaded_file and job_description:
+
+    resume_text = extract_text_from_pdf(uploaded_file)
+
+    resume_embedding = model.encode(resume_text)
+    jd_embedding = model.encode(job_description)
+
+    similarity = cosine_similarity(
+        [resume_embedding],
+        [jd_embedding]
+    )[0][0]
+
+    score = round(similarity * 100, 2)
+
+    st.success("Resume analyzed successfully!")
+    st.subheader("Result")
+    st.metric("Resume Match Score", f"{score}%")
+
+elif uploaded_file and not job_description:
+    st.warning("Please enter the job description.")
+
+
